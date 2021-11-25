@@ -1,6 +1,7 @@
 import React from 'react';
 import AppLoading from 'expo-app-loading';
 import { Register } from './src/screens/Register';
+// import { Dashboard } from './src/screens/Dashboard';
 import {ThemeProvider} from 'styled-components';
 import theme from './src/global/styles/theme';
 import {
