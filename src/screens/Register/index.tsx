@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Modal } from 'react-native';
+import { 
+  Keyboard, 
+  Modal, 
+  TouchableWithoutFeedback,
+  Alert,
+} from 'react-native';
+import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+
 import {useForm} from 'react-hook-form';
 
 import { Input } from '../../Components/Forms/Input';
@@ -23,6 +31,14 @@ interface FormData {
   amount: string;
 }
 
+const schema = Yup.object().shape({
+  name: Yup.string().required('Name is mandatory'),
+  amount: Yup
+  .number()
+  .typeError('Use a valid numeric value')
+  .positive('Value can not be negative')
+});
+
 export function Register(){
   const [transactionType, setTransactionType] = useState('');
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);
@@ -35,7 +51,10 @@ export function Register(){
   const {
     control,
     handleSubmit,
-  } = useForm();
+    formState: { errors }
+  } = useForm({
+    resolver: yupResolver(schema)
+  });
 
   function handleTransactionTypeSelect(type: 'up' | 'down'){
     setTransactionType(type);
@@ -50,6 +69,13 @@ export function Register(){
   }
 
   function handleRegister(form: FormData){
+    if(!transactionType)
+      return Alert.alert('Choose a transaction type');
+
+    if(category.key === 'category')
+      return Alert.alert('Choose a category');
+
+    
     const data = {
       name: form.name,
       amount: form.amount,
@@ -61,6 +87,7 @@ export function Register(){
   }
 
   return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <Container>
       <Header>
         <Title>Register</Title>
@@ -72,11 +99,16 @@ export function Register(){
             name="name"
             control={control}
             placeholder="Name"
+            autoCapitalize="sentences"
+            autoCorrect={false}
+            error={errors.name && errors.name.message}
           />
           <InputForm 
             name="amount"
             control={control}
-            placeholder="Price"
+            placeholder="Value"
+            keyboardType="numeric"
+            error={errors.amount && errors.amount.message}
           />
 
           <TransactionsTypes>
@@ -115,5 +147,6 @@ export function Register(){
         />
       </Modal>
     </Container>
+    </TouchableWithoutFeedback>
   )
 }
