@@ -1,4 +1,6 @@
 import React from 'react';
+import 'intl';
+import 'intl/locale-data/jsonp/en-US';
 import AppLoading from 'expo-app-loading';
 import { Register } from './src/screens/Register';
 // import { Dashboard } from './src/screens/Dashboard';
