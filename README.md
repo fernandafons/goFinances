@@ -15,8 +15,4 @@ This app was developed through [Rocketseat](https://www.rocketseat.com.br/) Reac
 
 * [React Native](https://reactnative.dev/) - The framework used
 
-## Authors
-
-* **Maria Fernanda** - *Initial work* - [FernandaFons](https://github.com/fernandafons)
-
 Any questions? Contact me on my [LinkedIn](https://www.linkedin.com/in/fernandafons/)
