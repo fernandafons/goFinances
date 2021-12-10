@@ -1,6 +1,6 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 import * as AuthSession from 'expo-auth-session';
-import { User } from '../screens/Dashboard/styles';
+// import { User } from '../screens/Dashboard/styles';
 
 interface AuthProviderProps{
   children: ReactNode;
@@ -18,17 +18,17 @@ interface IAuthContextData{
   signInWithGoogle(): Promise<void>;
 }
 
-interface AuthorizationResponse {
-  params: {
-    access_token: string;
-  };
-  type: string;
-}
+// interface AuthorizationResponse {
+//   params: {
+//     access_token: string;
+//   };
+//   type: string;
+// }
 
 const AuthContext = createContext({} as IAuthContextData);
 
 function AuthProvider({ children }: AuthProviderProps){
-  const [user, setUser] = useState<User>({} as User);
+  const [user, setUser] = useState({} as User);
 
   async function signInWithGoogle(){
     try {
@@ -39,23 +39,27 @@ function AuthProvider({ children }: AuthProviderProps){
 
       const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}`;
 
-      const {type, params} = await AuthSession
-      .startAsync({ authUrl }) as AuthorizationResponse;
+      const response = await AuthSession.startAsync({ authUrl })
 
-      if(type === 'success'){
-        const response = await fetch(`https://www.googleapis.com/oauth2/v1/user_info?alt=json&access_token=${params.access_token}`);
-        const userInfo = await response.json();
-        console.log(userInfo);
-        setUser({
-          id: userInfo.id,
-          email: userInfo.email,
-          name: userInfo.given_name,
-          photo: userInfo.picture
-        });
-      }
+      console.log(response)
+
+      setUser({} as User)
+
+      // if(type === 'success'){
+      //   const response = await fetch(`https://www.googleapis.com/oauth2/v1/user_info?alt=json&access_token=${params.access_token}`);
+      //   console.log('response:', response );
+      //   const userInfo = await response.json();
+      //   console.log('userInfo:', userInfo );
+      //   setUser({
+      //     id: userInfo.id,
+      //     email: userInfo.email,
+      //     name: userInfo.given_name,
+      //     photo: userInfo.picture
+      //   });
+      // }
 
     } catch (error) {
-      throw new Error(error as string);
+      throw new Error(String(error));
     }
   }
 
@@ -63,7 +67,7 @@ function AuthProvider({ children }: AuthProviderProps){
     <AuthContext.Provider value={{
       user,
       signInWithGoogle
-    }} >
+    }}>
       { children }
     </AuthContext.Provider>
   )
